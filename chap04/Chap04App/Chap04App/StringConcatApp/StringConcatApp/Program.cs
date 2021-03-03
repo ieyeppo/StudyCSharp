@@ -32,7 +32,6 @@ namespace StringConcatApp
 				for (int j = 0; j < star; j++)
 					Console.Write("*");
 				Console.WriteLine();
-
 				if (i < lines / 2)				//줄수의 중간까지 별과 공백의 증감값
 				{
 					space += 2;
