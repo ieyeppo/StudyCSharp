@@ -12,6 +12,8 @@ namespace UsingConstrolsApp
 {
     public partial class FrmMain : Form
     {
+        Random random = new Random();
+
         public FrmMain()
         {
             InitializeComponent();
@@ -19,6 +21,9 @@ namespace UsingConstrolsApp
 
         private void FrmMain_Load(object sender, EventArgs e)
         {
+            lvDummy.Columns.Add("Name");
+            lvDummy.Columns.Add("Columns");
+
             var FontList = FontFamily.Families;
             foreach(var font in FontList)
             {
@@ -63,9 +68,69 @@ namespace UsingConstrolsApp
             prbDisplay.Value = trbHandle.Value;
         }
 
-        private void prbDisplay_Click(object sender, EventArgs e)
+        private void btnModal_Click(object sender, EventArgs e)
         {
+            Form frm = new Form();
+            frm.Text = "Modal Form";
+            frm.Width = 300;
+            frm.Height = 100;
+            frm.BackColor = Color.Pink;
+            frm.ShowDialog();   //Modal 창 띄우기
+        }
 
+        private void btnModaless_Click(object sender, EventArgs e)
+        {
+            Form frm = new Form();
+            frm.Text = "Modaless Form";
+            frm.Width = 300;
+            frm.Height = 300;
+            frm.BackColor = Color.HotPink;
+            frm.Show();   //Modal 창 띄우기
+        }
+
+        private void btnMsgBox_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show(txtResult.Text, "MessageBox Test", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+        }
+
+        private void TreeToList()
+        {
+            lvDummy.Items.Clear();
+            foreach(TreeNode node in tvDummy.Nodes)
+            {
+                TreeToList(node);
+            }
+        }
+
+        private void TreeToList(TreeNode Node)
+        {
+            lvDummy.Items.Add(
+                    new ListViewItem(
+                        new string[]
+                        { Node.Text, Node.FullPath.Count(f => f == '\\').ToString() }));
+            foreach(TreeNode node in Node.Nodes)
+            {
+                TreeToList(node);
+            }
+        }
+
+        private void btnAddRoot_Click(object sender, EventArgs e)
+        {
+            tvDummy.Nodes.Add(random.Next().ToString());
+            TreeToList();
+        }
+
+        private void btnAddChild_Click(object sender, EventArgs e)
+        {
+            if(tvDummy.SelectedNode == null)
+            {
+                MessageBox.Show("선택된 노드가 없습니다.",
+                    "TreeView Test", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+            tvDummy.SelectedNode.Nodes.Add(random.Next().ToString());
+            tvDummy.SelectedNode.Expand();
+            TreeToList();
         }
     }
 }
